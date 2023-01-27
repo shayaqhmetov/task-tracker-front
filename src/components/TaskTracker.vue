@@ -72,6 +72,7 @@ export default {
     },
     deleteSelected() {
       this.bulkDelete(this.selected, this.task);
+      this.filterTasks();
     },
     filterTasks() {
       let tasks;
@@ -90,7 +91,6 @@ export default {
             : task.completed == false;
         });
       }
-      console.log("filterd:", this.currentTasks);
     },
   },
   components: {

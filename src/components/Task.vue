@@ -50,11 +50,11 @@ export default {
     },
     saveTask() {
       this.update(this.task, this.newTodo, this.task.completed);
-      this.$parent.filterTasks("");
+      this.$parent.filterTasks();
     },
     deleteTask() {
       this.delete(this.task, this.parentTask);
-      this.$parent.filterTasks("");
+      this.$parent.filterTasks();
     },
     done() {
       this.update(this.task, this.task.todo, !this.task.completed);
