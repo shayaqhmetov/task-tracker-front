@@ -1,20 +1,28 @@
 <template>
-  <div class="task" :class="{ done: task.completed }">
-    <input type="checkbox" v-model="isChecked" v-on:change="choose" />
-    <h4>{{ task.todo }}</h4>
-    <div v-if="isEditable">
-      <input type="text" v-model="newTodo" @keydown.enter="saveTask" />
-      <button @click="saveTask">Сохранить</button>
-      <button @click="closeEdit">Закрыть</button>
+  <div class="task row" :class="{ done: task.completed }">
+    <div class="task-check col-1">
+      <input type="checkbox" v-model="isChecked" v-on:change="choose" />
     </div>
-    <div v-else>
-      <button @click="editTask">Изменить</button>
-      <button @click="deleteTask">Удалить</button>
-      <button @click="done">
-        <span v-if="!task.completed">Готово</span>
-        <span v-else>Не готово</span>
-      </button>
-      <router-link :to="{ params: { id: task.id }, name: 'task' }">Подробнее</router-link>
+    <div class="task-todo col-10">
+      <h4>{{ task.todo }}</h4>
+    </div>
+
+    <div class="task-actions col-1">
+      <div v-if="isEditable">
+        <input type="text" v-model="newTodo" @keydown.enter="saveTask" />
+        <button @click="saveTask" class="btn">Сохранить</button>
+        <button @click="closeEdit" class="btn">Закрыть</button>
+      </div>
+      <div v-else>
+        <button @click="done" class="btn">
+          <span v-if="!task.completed">Готово</span>
+          <span v-else>Не готово</span>
+        </button>
+        <button @click="editTask" class="btn">Изменить</button>
+        <button @click="deleteTask" class="btn">Удалить</button>
+        <router-link v-if="!parentTask" class="btn"
+          :to="{ params: { id: task.id }, name: 'task' }">Подробнее</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -41,16 +49,17 @@ export default {
       this.isEditable = false;
     },
     saveTask() {
-      this.update(this.task.id, this.newTodo, this.task.completed);
+      this.update(this.task, this.newTodo, this.task.completed);
+      this.$parent.filterTasks("");
     },
     deleteTask() {
-      this.delete(this.task.id);
+      this.delete(this.task, this.parentTask);
+      this.$parent.filterTasks("");
     },
     done() {
-      this.update(this.task.id, this.task.todo, !this.task.completed);
+      this.update(this.task, this.task.todo, !this.task.completed);
     },
     choose() {
-      console.log(this.isChecked);
       if (this.isChecked) {
         this.$parent.select(this.task.id);
       } else {
@@ -58,11 +67,12 @@ export default {
       }
     },
   },
-  props: ["task"],
+  props: ["task", "parentTask"],
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .task {
+  text-align: left;
   border: 1px solid black;
   padding: 20px;
   margin-top: 10px;
@@ -72,7 +82,31 @@ export default {
   }
 
   &.done {
-    background-color: green;
+    background-color: #71b871;
+  }
+
+  .task-check,
+  .task-todo,
+  .task-actions {
+    height: 100%;
+  }
+
+  .task-check {
+    display: inline-block;
+  }
+
+  .task-todo {}
+
+  .task-actions {
+    text-align: right;
+  }
+
+  .btn:not(:first-child) {
+    margin-top: 10px !important;
+  }
+
+  .btn {
+    width: 100%;
   }
 }
 </style>

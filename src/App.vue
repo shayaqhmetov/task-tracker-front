@@ -14,7 +14,23 @@ body {
   margin: 0px;
 }
 
-.container {
-  border: 1px solid red;
+.container {}
+
+.btn {
+  cursor: pointer;
+  background-color: black;
+  color: white;
+  display: inline-block;
+  padding: 5px;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 3px;
+  border: none;
+  transition: background-color 0.2s;
+}
+
+.btn:hover {
+  color: white;
+  background-color: red;
 }
 </style>
